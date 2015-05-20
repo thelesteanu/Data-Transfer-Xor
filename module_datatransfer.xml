@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_datatransfer" default="compile.module.datatransfer">
+  <dirname property="module.datatransfer.basedir" file="${ant.file.module_datatransfer}"/>
+  
+  <property name="module.jdk.home.datatransfer" value="${jdk.home.1.8}"/>
+  <property name="module.jdk.bin.datatransfer" value="${jdk.bin.1.8}"/>
+  <property name="module.jdk.classpath.datatransfer" value="jdk.classpath.1.8"/>
+  
+  <property name="compiler.args.datatransfer" value="-encoding windows-1250 -source 8 ${compiler.args}"/>
+  
+  <property name="datatransfer.output.dir" value="${module.datatransfer.basedir}/bin"/>
+  <property name="datatransfer.testoutput.dir" value="${module.datatransfer.basedir}/bin"/>
+  
+  <path id="datatransfer.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="datatransfer.module.production.classpath">
+    <path refid="${module.jdk.classpath.datatransfer}"/>
+    <pathelement location="${basedir}/../Proiect DataTransfer/Program/ocsf231.jar"/>
+  </path>
+  
+  <path id="datatransfer.runtime.production.module.classpath">
+    <pathelement location="${datatransfer.output.dir}"/>
+    <pathelement location="${basedir}/../Proiect DataTransfer/Program/ocsf231.jar"/>
+  </path>
+  
+  <path id="datatransfer.module.classpath">
+    <pathelement location="${datatransfer.output.dir}"/>
+    <path refid="${module.jdk.classpath.datatransfer}"/>
+    <pathelement location="${basedir}/../Proiect DataTransfer/Program/ocsf231.jar"/>
+  </path>
+  
+  <path id="datatransfer.runtime.module.classpath">
+    <pathelement location="${datatransfer.output.dir}"/>
+    <pathelement location="${basedir}/../Proiect DataTransfer/Program/ocsf231.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.datatransfer">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.datatransfer">
+    <patternset refid="excluded.from.module.datatransfer"/>
+  </patternset>
+  
+  <path id="datatransfer.module.sourcepath">
+    <dirset dir="${module.datatransfer.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.datatransfer" depends="compile.module.datatransfer.production,compile.module.datatransfer.tests" description="Compile module DataTransfer"/>
+  
+  <target name="compile.module.datatransfer.production" depends="register.custom.compilers" description="Compile module DataTransfer; production classes">
+    <mkdir dir="${datatransfer.output.dir}"/>
+    <javac2 destdir="${datatransfer.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.datatransfer}/javac">
+      <compilerarg line="${compiler.args.datatransfer}"/>
+      <bootclasspath refid="datatransfer.module.bootclasspath"/>
+      <classpath refid="datatransfer.module.production.classpath"/>
+      <src refid="datatransfer.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.datatransfer"/>
+    </javac2>
+    
+    <copy todir="${datatransfer.output.dir}">
+      <fileset dir="${module.datatransfer.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.datatransfer.tests" depends="register.custom.compilers,compile.module.datatransfer.production" description="compile module DataTransfer; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.datatransfer" description="cleanup module">
+    <delete dir="${datatransfer.output.dir}"/>
+    <delete dir="${datatransfer.testoutput.dir}"/>
+  </target>
+</project>
