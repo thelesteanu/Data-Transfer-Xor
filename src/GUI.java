@@ -109,12 +109,12 @@ public class GUI extends JFrame {
 		fileChooser = new JFileChooser();
 		fileChooser.setVisible(true);
 		fileChooser.setBounds(0, 0, 300, 300);
-		/*server = new Server(DEFAULT_PORT, this);
+		server = new Server(DEFAULT_PORT, this);
 		try {
 			server.listen(); // serverul incepe sa astepte clienti
 		} catch (Exception ex) {
 			addTextToLogger("ERROR: Server doesn't start!");
-		}*/
+		}
 		transferFile.addActionListener(new ActionListener() { // se adauga
 																// ascultator pt
 																// butonul de
