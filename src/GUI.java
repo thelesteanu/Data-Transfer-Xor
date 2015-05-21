@@ -57,10 +57,10 @@ public class GUI extends JFrame {
 		transferFile.setBounds(10, 100, 200, 30);
 		transferFile.setVisible(true);
 		transferFile.setEnabled(false);
-		add(transferFile);
+		//add(transferFile); TODO HIDDEN TRANSFER FILE
 
 		sendMessage = new JButton("Send Message");
-		sendMessage.setBounds(10, 150, 200, 30);
+		sendMessage.setBounds(10, 100, 200, 30);
 		sendMessage.setVisible(true);
 		sendMessage.setEnabled(false);
 		add(sendMessage);
