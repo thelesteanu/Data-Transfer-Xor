@@ -86,7 +86,7 @@ public class GUI extends JFrame {
 		add(host);
 
 		connectToPortText = new JLabel("Connect to Port:");
-		connectToPortText.setBounds(230, 160, 120, 25);
+		connectToPortText.setBounds(200, 160, 150, 25);
 		connectToPortText.setVisible(true);
 		add(connectToPortText);
 
@@ -97,7 +97,7 @@ public class GUI extends JFrame {
 		add(connectToPort);
 
 		connectToHostText = new JLabel("Connect to Host:");
-		connectToHostText.setBounds(230, 190, 120, 25);
+		connectToHostText.setBounds(200, 190, 150, 25);
 		connectToHostText.setVisible(true);
 		add(connectToHostText);
 
