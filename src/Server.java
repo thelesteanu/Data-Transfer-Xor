@@ -24,9 +24,33 @@ public class Server extends AbstractServer {
             firstMessage = (Message) msg;
         } else {
             Message message = (Message) msg;
-            String newStringMessage = executeXor((String) firstMessage.getArgs()[0], (String) message.getArgs()[0]); //TODO!!!!!!
-            sendToAllClients(new Message(message.getType(), new Object[]{newStringMessage}));
-            firstMessage = null;
+            if (message.getType() == Message.MessageType.DATA_TRANSFER) {
+
+                byte[] xoredFiles = executeXorOnArray((byte[]) firstMessage.getArgs()[1], (byte[]) message.getArgs()[1]);
+                sendToAllClients(new Message(
+                        Message.MessageType.DATA_TRANSFER,
+                        new Object[]{
+                                firstMessage.getArgs()[0],
+                                xoredFiles,
+                                firstMessage.getArgs()[2]}));
+
+
+                sendToAllClients(new Message(
+                        Message.MessageType.DATA_TRANSFER,
+                        new Object[]{
+                                message.getArgs()[0],
+                                xoredFiles,
+                                message.getArgs()[2]}));
+
+
+                firstMessage = null;
+
+            } else {
+                String newStringMessage = executeXor((String) firstMessage.getArgs()[0], (String) message.getArgs()[0]); //TODO!!!!!!
+                sendToAllClients(new Message(message.getType(), new Object[]{newStringMessage}));
+                firstMessage = null;
+            }
+
         }
     }
 
@@ -57,6 +81,29 @@ public class Server extends AbstractServer {
             }
         }
         return returnStringFromArray(xorArray);
+    }
+
+    private byte[] executeXorOnArray(byte[] firstArray, byte[] secondArray) {
+        int i = 0;
+        byte[] xorArray;
+        if (firstArray.length > secondArray.length) {
+            xorArray = new byte[firstArray.length];
+            byte[] zeros = new byte[firstArray.length - secondArray.length];
+            Arrays.fill(zeros, (byte) 0);
+            secondArray = concat(zeros, secondArray);
+            for (byte b : firstArray) {
+                xorArray[i] = (byte) (b ^ secondArray[i++]);
+            }
+        } else {
+            xorArray = new byte[secondArray.length];
+            byte[] zeros = new byte[secondArray.length - firstArray.length];
+            Arrays.fill(zeros, (byte) 0);
+            firstArray = concat(zeros, firstArray);
+            for (byte b : secondArray) {
+                xorArray[i] = (byte) (b ^ firstArray[i++]);
+            }
+        }
+        return xorArray;
     }
 
     public byte[] concat(byte[] a, byte[] b) {

@@ -18,6 +18,8 @@ import javax.swing.JTextField;
 
 public class GUI extends JFrame {
 	public String sentMessage = null;
+    public byte[] fileStreamArray = null;
+    public String fileStreamName = null;
 	private static final int DEFAULT_PORT = 5555; // portul la care asculta
 													// serverul
 	private final JButton connect; // buton pt conectare
@@ -54,10 +56,10 @@ public class GUI extends JFrame {
 		add(title);
 
 		transferFile = new JButton("TransferFile");
-		transferFile.setBounds(10, 100, 200, 30);
+		transferFile.setBounds(10, 135, 200, 30);
 		transferFile.setVisible(true);
 		transferFile.setEnabled(false);
-		//add(transferFile); TODO HIDDEN TRANSFER FILE
+		add(transferFile);
 
 		sendMessage = new JButton("Send Message");
 		sendMessage.setBounds(10, 100, 200, 30);
@@ -152,7 +154,8 @@ public class GUI extends JFrame {
 								// trimite fisierul si IP-ul clientului pentru
 								// ca
 								// fisierul sa nu fie ii fie retrimis.
-
+                                fileStreamArray = b;
+                                fileStreamName = selectedFile.getName();
 								client.sendToServer(new Message(
 										Message.MessageType.DATA_TRANSFER,
 										new Object[] {

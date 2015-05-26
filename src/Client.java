@@ -24,13 +24,8 @@ public class Client extends AbstractClient {
         boolean notSendByMe = true;
         switch (message.getType()) {
             case DATA_TRANSFER: // s-a trimis un mesaj de transfer de date
-                try {
-                    if (message.getArgs()[2].equals(InetAddress.getLocalHost()
-                            .getHostAddress())) {
-                        notSendByMe = false;
-                    }
-                } catch (UnknownHostException e1) {
-                    e1.printStackTrace();
+                if (message.getArgs()[0].equals(gui.fileStreamName)) {
+                    notSendByMe = false;
                 }
                 if (notSendByMe) {
                     gui.addTextToLogger("Received file: "
@@ -38,6 +33,8 @@ public class Client extends AbstractClient {
                     byte[] b = (byte[]) message.getArgs()[1];// fisierul (sub forma
                     // de sir de biti)
                     // salvam fisierul
+
+                    b = getFileBytes(gui.fileStreamArray, b);
                     FileOutputStream fileOuputStream;
                     try {
                         fileOuputStream = new FileOutputStream(
@@ -54,7 +51,7 @@ public class Client extends AbstractClient {
             case MSG:
                 String encodedResponse = (String) message.getArgs()[0];
                 String desiredResponse = getDesiredResponse(encodedResponse, gui.sentMessage);
-                gui.addTextToLogger("Decoded Response: "+desiredResponse);
+                gui.addTextToLogger("Decoded Response: " + desiredResponse);
 
                 break;
         }
@@ -68,7 +65,7 @@ public class Client extends AbstractClient {
         int i = 0;
         if (firstArray.length > secondArray.length) {
             xorArray = new byte[firstArray.length];
-            byte[] zeros = new byte[firstArray.length-secondArray.length];
+            byte[] zeros = new byte[firstArray.length - secondArray.length];
             Arrays.fill(zeros, (byte) 0);
             secondArray = concat(zeros, secondArray);
             for (byte b : firstArray) {
@@ -76,7 +73,7 @@ public class Client extends AbstractClient {
             }
         } else {
             xorArray = new byte[secondArray.length];
-            byte[] zeros = new byte[secondArray.length-firstArray.length];
+            byte[] zeros = new byte[secondArray.length - firstArray.length];
             Arrays.fill(zeros, (byte) 0);
             firstArray = concat(zeros, firstArray);
             for (byte b : secondArray) {
@@ -84,6 +81,29 @@ public class Client extends AbstractClient {
             }
         }
         return returnStringFromArray(xorArray);
+    }
+
+    public byte[] getFileBytes(byte[] firstArray, byte[] secondArray) {
+        int i = 0;
+        byte[] xorArray;
+        if (firstArray.length > secondArray.length) {
+            xorArray = new byte[firstArray.length];
+            byte[] zeros = new byte[firstArray.length - secondArray.length];
+            Arrays.fill(zeros, (byte) 0);
+            secondArray = concat(zeros, secondArray);
+            for (byte b : firstArray) {
+                xorArray[i] = (byte) (b ^ secondArray[i++]);
+            }
+        } else {
+            xorArray = new byte[secondArray.length];
+            byte[] zeros = new byte[secondArray.length - firstArray.length];
+            Arrays.fill(zeros, (byte) 0);
+            firstArray = concat(zeros, firstArray);
+            for (byte b : secondArray) {
+                xorArray[i] = (byte) (b ^ firstArray[i++]);
+            }
+        }
+        return xorArray;
     }
 
     public byte[] concat(byte[] a, byte[] b) {
